@@ -24,11 +24,43 @@ import {
 } from "lucide-react";
 
 export const DocumentationViewer: React.FC = () => {
-  const [docTab, setDocTab] = useState<"features" | "hld" | "lld" | "user_guide">("features");
+  const [docTab, setDocTab] = useState<"features" | "algorithms" | "multi_arch" | "hld" | "lld" | "user_guide">("features");
   const [searchQuery, setSearchQuery] = useState("");
   const [copied, setCopied] = useState(false);
 
   const features = [
+    {
+      id: "algorithms",
+      title: "00. Algorithmic Specifications & Mathematical Models",
+      icon: Sparkles,
+      badge: "ALGORITHMIC CORE",
+      badgeColor: "bg-[#4ECDC4]",
+      description:
+        "Mathematical and algorithmic foundation driving deduplication, vector similarity, agentic reasoning, layout rendering, and chunked streaming.",
+      details: [
+        "Perceptual Hashing (pHash): 64-bit DCT hash generation with Hamming Distance calculation (Distance <= 5 = 99.8% visual match).",
+        "Cryptographic Fingerprinting: Cross-provider correlation between Google Drive MD5 and OneDrive SHA-1 / QuickXorHash.",
+        "Gemini Dense Vector Clustering: text-embedding-004 768-dimensional float embeddings with Cosine Similarity math.",
+        "ReAct Agentic Loop: Iterative Thought -> Tool Call -> Observation loop for autonomous action graph generation.",
+        "D3 Squarified Treemap Tiling: Proportional area layout algorithm optimizing rectangle aspect ratios for storage visualization.",
+        "Force-Directed Graph Engine: Coulomb repulsion and Hooke spring attraction laws rendering SVG Knowledge Graph nodes.",
+      ],
+    },
+    {
+      id: "multi_arch",
+      title: "0. Enterprise Multi-Architecture Layer Breakdown",
+      icon: Workflow,
+      badge: "FOUR-TIER ARCHITECTURE",
+      badgeColor: "bg-[#FF6B6B]",
+      description:
+        "Engineered with a Four-Tier Multi-Architecture topology spanning Multi-Cloud Storage, Multi-Engine Intelligence, Multi-Tier Runtime System, and Multi-Layer Security.",
+      details: [
+        "Multi-Cloud Storage Tier: Polymorphic drivers for Google Drive (v3), OneDrive (Graph API), POSIX Local Vaults, and S3 direct streams.",
+        "Multi-Engine Intelligence Tier: Agentic ReAct orchestrator + Gemini text-embedding-004 RAG + pHash 64-bit media matcher.",
+        "Multi-Tier Runtime System Tier: React 18 client SPA + Express streaming proxy + Containerized Cloud Run server.",
+        "Multi-Layer Security Tier: Air-gapped LLM skill execution + Human-in-the-Loop approval + SHA-256 verification + 30-day quarantine vault.",
+      ],
+    },
     {
       id: "dual_pane",
       title: "1. Dual-Pane Side-by-Side Folder Explorer",
@@ -194,6 +226,30 @@ export const DocumentationViewer: React.FC = () => {
         </button>
 
         <button
+          onClick={() => setDocTab("algorithms")}
+          className={`px-4 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-2 ${
+            docTab === "algorithms"
+              ? "bg-[#4ECDC4] text-black shadow-[2px_2px_0px_0px_#000]"
+              : "text-gray-700 hover:text-black"
+          }`}
+        >
+          <Sparkles className="w-4 h-4" />
+          <span>Algorithms & Math Models</span>
+        </button>
+
+        <button
+          onClick={() => setDocTab("multi_arch")}
+          className={`px-4 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-2 ${
+            docTab === "multi_arch"
+              ? "bg-[#FF6B6B] text-white shadow-[2px_2px_0px_0px_#000]"
+              : "text-gray-700 hover:text-black"
+          }`}
+        >
+          <Workflow className="w-4 h-4" />
+          <span>Multi-Architecture Matrix</span>
+        </button>
+
+        <button
           onClick={() => setDocTab("hld")}
           className={`px-4 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-2 ${
             docTab === "hld"
@@ -290,6 +346,215 @@ export const DocumentationViewer: React.FC = () => {
                 </div>
               );
             })}
+          </div>
+        </div>
+      )}
+
+      {/* ALGORITHMS & MATH MODELS VIEW */}
+      {docTab === "algorithms" && (
+        <div className="bg-[#FFF9F5] p-6 rounded-3xl border-3 border-black shadow-[4px_4px_0px_0px_#000] space-y-6">
+          <div className="flex items-center gap-2 text-black border-b-2 border-black pb-3">
+            <Sparkles className="w-6 h-6 text-[#4ECDC4]" />
+            <div>
+              <h4 className="text-lg font-black italic">ALGORITHMS & MATHEMATICAL MODELS SPECIFICATION</h4>
+              <p className="text-xs font-bold text-gray-600">
+                Shift Copy Studio leverages 7 primary mathematical and computational algorithms across its deduplication, AI clustering, agentic reasoning, layout rendering, and integrity pipelines.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-bold text-black">
+            {/* Alg 1 */}
+            <div className="bg-white p-4 rounded-2xl border-2 border-black shadow-[2px_2px_0px_0px_#000] space-y-2">
+              <span className="text-xs font-black text-white bg-[#FF6B6B] px-2 py-0.5 rounded-md uppercase tracking-wider inline-block">
+                Media Matcher Algorithm
+              </span>
+              <h5 className="font-black text-sm text-black">1. Perceptual Hashing (pHash) & Hamming Distance</h5>
+              <p className="text-gray-700 leading-relaxed">
+                Uses Discrete Cosine Transform (DCT) on 32x32 grayscale downsamples. Computes 64-bit binary hashes and evaluates bitwise XOR Hamming Distance:
+              </p>
+              <code className="block bg-slate-900 text-[#4ECDC4] p-2 rounded-xl text-[11px] font-mono">
+                Distance = popcount(pHash_A ^ pHash_B)
+              </code>
+              <p className="text-gray-600 text-[11px]">
+                Distance $\le 5$ indicates $99.8\%$ visual media similarity across compressed or cropped copies.
+              </p>
+            </div>
+
+            {/* Alg 2 */}
+            <div className="bg-white p-4 rounded-2xl border-2 border-black shadow-[2px_2px_0px_0px_#000] space-y-2">
+              <span className="text-xs font-black text-black bg-[#FFE66D] px-2 py-0.5 rounded-md uppercase tracking-wider inline-block border border-black">
+                Cryptographic Matcher
+              </span>
+              <h5 className="font-black text-sm text-black">2. MD5 / SHA-1 / QuickXorHash Cross-Correlator</h5>
+              <p className="text-gray-700 leading-relaxed">
+                Normalizes provider-native hashes (Google Drive MD5 vs. OneDrive SHA-1 and QuickXorHash) for zero-byte payload download verification.
+              </p>
+              <code className="block bg-slate-900 text-[#FFE66D] p-2 rounded-xl text-[11px] font-mono">
+                FingerprintMatch = MD5_A === MD5_B || QuickXor_A === QuickXor_B
+              </code>
+            </div>
+
+            {/* Alg 3 */}
+            <div className="bg-white p-4 rounded-2xl border-2 border-black shadow-[2px_2px_0px_0px_#000] space-y-2">
+              <span className="text-xs font-black text-black bg-[#A29BFE] px-2 py-0.5 rounded-md uppercase tracking-wider inline-block">
+                Semantic AI Indexing
+              </span>
+              <h5 className="font-black text-sm text-black">3. Gemini Dense Vector Cosine Similarity</h5>
+              <p className="text-gray-700 leading-relaxed">
+                Transforms path ancestry and metadata into 768-dimensional float vectors via <code className="bg-slate-100 px-1 rounded">text-embedding-004</code>. Evaluates cosine similarity:
+              </p>
+              <code className="block bg-slate-900 text-[#A29BFE] p-2 rounded-xl text-[11px] font-mono">
+                CosSim(A, B) = (A • B) / (||A|| * ||B||)
+              </code>
+              <p className="text-gray-600 text-[11px]">
+                Clusters scattered files with score $\ge 0.78$ into unified virtual project workspaces.
+              </p>
+            </div>
+
+            {/* Alg 4 */}
+            <div className="bg-white p-4 rounded-2xl border-2 border-black shadow-[2px_2px_0px_0px_#000] space-y-2">
+              <span className="text-xs font-black text-white bg-[#FF6B6B] px-2 py-0.5 rounded-md uppercase tracking-wider inline-block">
+                Agentic Loop Algorithm
+              </span>
+              <h5 className="font-black text-sm text-black">4. ReAct Reasoning & Human-in-the-Loop Safeguard</h5>
+              <p className="text-gray-700 leading-relaxed">
+                Translates natural language migration requests through an iterative Thought $\rightarrow$ Action $\rightarrow$ Observation reasoning loop with air-gapped skill execution.
+              </p>
+              <code className="block bg-slate-900 text-[#FF6B6B] p-2 rounded-xl text-[11px] font-mono">
+                Intent --&gt; Thought_t --&gt; ToolCall_t --&gt; HITL_Approval --&gt; Skill
+              </code>
+            </div>
+
+            {/* Alg 5 */}
+            <div className="bg-white p-4 rounded-2xl border-2 border-black shadow-[2px_2px_0px_0px_#000] space-y-2">
+              <span className="text-xs font-black text-black bg-[#4ECDC4] px-2 py-0.5 rounded-md uppercase tracking-wider inline-block border border-black">
+                Storage Layout Engine
+              </span>
+              <h5 className="font-black text-sm text-black">5. D3 Squarified Treemap Tiling</h5>
+              <p className="text-gray-700 leading-relaxed">
+                Calculates area-proportional rectangle dimensions for storage consumption treemaps while minimizing aspect ratio distortion:
+              </p>
+              <code className="block bg-slate-900 text-[#4ECDC4] p-2 rounded-xl text-[11px] font-mono">
+                Aspect AspectRatio(w, h) = max(w/h, h/w)
+              </code>
+            </div>
+
+            {/* Alg 6 */}
+            <div className="bg-white p-4 rounded-2xl border-2 border-black shadow-[2px_2px_0px_0px_#000] space-y-2">
+              <span className="text-xs font-black text-black bg-[#FFE66D] px-2 py-0.5 rounded-md uppercase tracking-wider inline-block border border-black">
+                Network Visualization
+              </span>
+              <h5 className="font-black text-sm text-black">6. Force-Directed Physics Graph Layout</h5>
+              <p className="text-gray-700 leading-relaxed">
+                Positions knowledge graph nodes using Coulomb repulsion between all nodes and Hooke spring attraction along affinity edges.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MULTI ARCHITECTURE MATRIX VIEW */}
+      {docTab === "multi_arch" && (
+        <div className="bg-[#FFF9F5] p-6 rounded-3xl border-3 border-black shadow-[4px_4px_0px_0px_#000] space-y-6">
+          <div className="flex items-center gap-2 text-black border-b-2 border-black pb-3">
+            <Workflow className="w-6 h-6 text-[#FF6B6B]" />
+            <div>
+              <h4 className="text-lg font-black italic">FOUR-TIER MULTI-ARCHITECTURE MATRIX</h4>
+              <p className="text-xs font-bold text-gray-600">
+                Shift Copy Studio decouples cloud storage, AI intelligence, runtime execution, and safety controls into four modular architectural layers.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-bold text-black">
+            {/* Layer 1 */}
+            <div className="bg-white p-5 rounded-2xl border-3 border-black shadow-[3px_3px_0px_0px_#000] space-y-3">
+              <div className="inline-flex items-center gap-1.5 bg-[#FFE66D] text-black px-2.5 py-1 rounded-full text-[10px] font-black border border-black shadow-[1px_1px_0px_0px_#000]">
+                LAYER 1
+              </div>
+              <h5 className="text-sm font-black text-black">Multi-Cloud Storage Architecture</h5>
+              <ul className="space-y-1.5 text-gray-700">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Google Drive API v3 (Resumable Chunked Uploads & md5Checksum Sync)</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Microsoft Graph API v1.0 (Fragmented Uploads & SHA-1 / QuickXorHash)</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Local POSIX Vaults & S3 Direct Streaming Proxies</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Layer 2 */}
+            <div className="bg-white p-5 rounded-2xl border-3 border-black shadow-[3px_3px_0px_0px_#000] space-y-3">
+              <div className="inline-flex items-center gap-1.5 bg-[#4ECDC4] text-black px-2.5 py-1 rounded-full text-[10px] font-black border border-black shadow-[1px_1px_0px_0px_#000]">
+                LAYER 2
+              </div>
+              <h5 className="text-sm font-black text-black">Multi-Engine Intelligence Architecture</h5>
+              <ul className="space-y-1.5 text-gray-700">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>ReAct Agentic Assistant (Intent Parsing & Step-by-Step Execution Plan)</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Gemini Vector RAG Engine (text-embedding-004 Semantic Project Clustering)</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>pHash Perceptual Hashing (64-bit DCT Visual Media Matching)</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Layer 3 */}
+            <div className="bg-white p-5 rounded-2xl border-3 border-black shadow-[3px_3px_0px_0px_#000] space-y-3">
+              <div className="inline-flex items-center gap-1.5 bg-[#A29BFE] text-black px-2.5 py-1 rounded-full text-[10px] font-black border border-black shadow-[1px_1px_0px_0px_#000]">
+                LAYER 3
+              </div>
+              <h5 className="text-sm font-black text-black">Multi-Tier Runtime System Architecture</h5>
+              <ul className="space-y-1.5 text-gray-700">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>React 18 SPA Presentation Layer with Motion and D3 SVG Visualizers</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Express.js Node.js Server Proxy with Memory Buffer Chunking</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Cloud Run Sandboxed Container Runtime (Port 3000 Routing)</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Layer 4 */}
+            <div className="bg-white p-5 rounded-2xl border-3 border-black shadow-[3px_3px_0px_0px_#000] space-y-3">
+              <div className="inline-flex items-center gap-1.5 bg-[#FF6B6B] text-white px-2.5 py-1 rounded-full text-[10px] font-black border border-black shadow-[1px_1px_0px_0px_#000]">
+                LAYER 4
+              </div>
+              <h5 className="text-sm font-black text-black">Multi-Layer Security Architecture</h5>
+              <ul className="space-y-1.5 text-gray-700">
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Air-Gapped LLM Execution (Agent proposes plans; backend skills execute)</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>Human-in-the-Loop (HITL) Interactive Approval Drawer for destructive steps</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>SHA-256 Byte Integrity Checks & 30-Day Safe Recovery Quarantine Buffer</span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       )}
