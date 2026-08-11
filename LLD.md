@@ -107,25 +107,160 @@ export interface AgentStepPlan {
 
 ---
 
-## 2. API Endpoint Specification
+---
 
-### `POST /api/transfer/start`
-- **Description**: Initiates a background stream transfer between cloud storage endpoints.
+## 2. Server API Endpoint Specification (`/server.ts`)
+
+### 2.1 Directory Exploration & Metadata
+
+#### `GET /api/drive/folders`
+- **Description**: Fetches subfolders and files for a specified Google Drive folder or root.
+- **Query Parameters**:
+  - `folderId`: string (default `'root'`)
+  - `accessToken`: string (Google OAuth Bearer token)
+- **Response**: `200 OK`
+```json
+{
+  "folders": [
+    {
+      "id": "1A2B3C...",
+      "name": "Documents",
+      "mimeType": "application/vnd.google-apps.folder",
+      "itemCount": 42
+    }
+  ],
+  "files": [
+    {
+      "id": "4D5E6F...",
+      "name": "Report.pdf",
+      "size": 1048576,
+      "mimeType": "application/pdf",
+      "modifiedTime": "2026-08-10T12:00:00Z"
+    }
+  ],
+  "breadcrumbs": [
+    { "id": "root", "name": "My Drive" },
+    { "id": "1A2B3C...", "name": "Documents" }
+  ]
+}
+```
+
+#### `POST /api/drive/inspect`
+- **Description**: Validates a Google Drive share link or folder ID and inspects total contained files and size.
 - **Request Body**:
 ```json
 {
-  "sourceFileId": "1g92XkL0029",
-  "sourceDrive": "google_drive",
-  "targetPath": "/OneDrive/Backup/Doc.pdf",
-  "targetDrive": "onedrive",
-  "verifyChecksum": true
+  "folderUrlOrId": "https://drive.google.com/drive/folders/1A2B3C...",
+  "accessToken": "ya29.a0..."
 }
 ```
 - **Response**: `200 OK`
 ```json
 {
-  "jobId": "job_99812",
-  "status": "active",
-  "estimatedSecondsRemaining": 12
+  "valid": true,
+  "folderId": "1A2B3C...",
+  "folderName": "Shared Research Data",
+  "itemCount": 128,
+  "totalSizeBytes": 42949672960
 }
 ```
+
+#### `POST /api/drive/create-folder`
+- **Description**: Creates a new destination folder in Google Drive.
+- **Request Body**:
+```json
+{
+  "folderName": "Migrated_Backup_2026",
+  "parentFolderId": "root",
+  "accessToken": "ya29.a0..."
+}
+```
+- **Response**: `200 OK`
+```json
+{
+  "folderId": "9Z8Y7X...",
+  "folderName": "Migrated_Backup_2026"
+}
+```
+
+---
+
+### 2.2 Async Transfer Engine Endpoints
+
+#### `POST /api/drive/start-copy`
+- **Description**: Initiates a background asynchronous drive-to-drive migration job.
+- **Request Body**:
+```json
+{
+  "sourceFolderId": "1A2B3C...",
+  "targetFolderId": "9Z8Y7X...",
+  "config": {
+    "copyMode": "deep_clone",
+    "conflictStrategy": "rename",
+    "preserveTimestamps": true,
+    "skipDuplicates": true,
+    "parallelWorkers": 8
+  },
+  "sourceToken": "ya29.a0SourceToken...",
+  "targetToken": "ya29.a0TargetToken..."
+}
+```
+- **Response**: `200 OK`
+```json
+{
+  "jobId": "job_1751029881",
+  "status": "in_progress",
+  "totalFiles": 128,
+  "totalBytes": 42949672960
+}
+```
+
+#### `GET /api/drive/job-status/:jobId`
+- **Description**: Queries real-time progress, files completed, speed (MB/s), and active logs for a transfer job.
+- **Response**: `200 OK`
+```json
+{
+  "jobId": "job_1751029881",
+  "status": "in_progress",
+  "progress": {
+    "filesCopied": 48,
+    "totalFiles": 128,
+    "bytesTransferred": 16106127360,
+    "totalBytes": 42949672960,
+    "currentSpeedMBs": 28.5,
+    "estimatedSecondsRemaining": 94
+  },
+  "logs": [
+    "[12:04:12] Copied: /Research/Paper1.pdf (12.4 MB)",
+    "[12:04:13] Copied: /Research/Dataset.csv (140.2 MB)"
+  ]
+}
+```
+
+#### `POST /api/drive/job-action/:jobId`
+- **Description**: Sends operational control commands (`pause`, `resume`, `cancel`) to a running transfer job.
+- **Request Body**:
+```json
+{
+  "action": "pause"
+}
+```
+- **Response**: `200 OK`
+```json
+{
+  "jobId": "job_1751029881",
+  "status": "paused",
+  "message": "Transfer job job_1751029881 successfully paused."
+}
+```
+
+#### `POST /api/auth/refresh`
+- **Description**: Refreshes expired OAuth 2.0 access tokens using stored refresh tokens.
+- **Response**: `200 OK`
+```json
+{
+  "accessToken": "ya29.a0NewRefreshedToken...",
+  "expiresInSeconds": 3600
+}
+```
+

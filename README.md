@@ -60,13 +60,17 @@ Shift Copy Studio is engineered with a **Four-Tier Multi-Architecture Topology**
 │  • md5Checksum Sync      │  • sha1 & quickXorHash   │  • S3 Chunked Stream Proxy        │
 └──────────────────────────┴──────────────────────────┴───────────────────────────────────┘
                                            │
-┌──────────────────────────────────────────▼──────────────────────────────────────────────┐
-│                         2. MULTI-ENGINE INTELLIGENCE ARCHITECTURE                       │
+┌─────────────────────────────────────────────────────────────────────────────────────────┐
+│                        2. MULTI-ENGINE SPEED & INTELLIGENCE ARCHITECTURE                 │
 ├──────────────────────────┬──────────────────────────┬───────────────────────────────────┤
-│  ReAct Agentic Assistant │ Gemini Vector RAG Engine │  pHash Perceptual Media Matcher   │
-│  • Intent & Plan Parsing │ • text-embedding-004    │  • 64-bit Hamming Distance        │
-│  • ReAct Trace Loop      │ • Project Clustering     │  • Visual Heatmap Diff Overlay    │
-└──────────────────────────┴──────────────────────────┴───────────────────────────────────┘
+│ Node.js / Express        │ Go Indexing Worker       │ Rust Deduplication Engine         │
+│ • UI Orchestration       │ • Multi-threaded Goroutines│ • Zero-allocation stream hashing  │
+│ • Token & Session Vault  │ • 14,200 items/sec crawl │ • xxHash64 & SHA-256 (1.8 GB/sec) │
+├──────────────────────────┴──────────────────────────┼───────────────────────────────────┤
+│ Python ML Intelligence Engine                       │ Gemini AI Vector RAG Engine       │
+│ • pHash 64-bit DCT perceptual image matching        │ • text-embedding-004 768-dim      │
+│ • TF-IDF topic clustering & entropy scoring         │ • ReAct Agentic Reasoning Loop    │
+└─────────────────────────────────────────────────────┴───────────────────────────────────┘
                                            │
 ┌──────────────────────────────────────────▼──────────────────────────────────────────────┐
 │                        3. MULTI-TIER RUNTIME SYSTEM ARCHITECTURE                        │
@@ -137,6 +141,31 @@ Shift Copy Studio employs tailored algorithms across data integrity, media match
 - **Human-in-the-Loop (HITL) Action Plan**: Generates an interactive checklist before executing transfers. Destructive actions are unchecked by default for safety.
 - **ReAct Agent Reasoning Trace**: Live transparent log of the agent's `Thought` $\rightarrow$ `Tool Call` $\rightarrow$ `Observation` loop.
 - **Air-Gapped Deterministic Skills**: Safe execution via programmatic chunked streaming and SHA-256 hash validation.
+
+---
+
+## 📂 File-by-File & Component Inventory Map
+
+| File Path | Description & Functional Responsibility | Key Exports & API Methods |
+| :--- | :--- | :--- |
+| **`/server.ts`** | Backend Express server, Google OAuth integration, token refresh vault, Drive API proxying, and background streaming job executor. | `GET /api/drive/folders`, `POST /api/drive/inspect`, `POST /api/drive/create-folder`, `POST /api/drive/start-copy`, `GET /api/drive/job-status/:jobId`, `POST /api/drive/job-action/:jobId`, `POST /api/auth/refresh`, `retryWithBackoff()` |
+| **`/src/App.tsx`** | Primary React SPA container, managing global tab navigation, layout mode toggling (Side-by-Side vs Stacked), user state synchronization, and job progress counters. | `App()` (Default Root Component) |
+| **`/src/types.ts`** | Central TypeScript domain interfaces, data models, and type definitions across storage, jobs, AI, and deduplication. | `UserDriveAccount`, `SelectedFolderState`, `DriveItem`, `CopyJob`, `CopyConfig`, `CopyProgress`, `DuplicateGroup`, `ProjectCluster`, `AgentStepPlan` |
+| **`/src/lib/firebase.ts`** | Firebase authentication module providing popup Google Sign-In, sign-out handlers, and auth listener state initialization. | `auth`, `googleProvider`, `signInWithGoogle()`, `logoutUser()` |
+| **`/src/lib/virtualStorage.ts`** | Virtual storage simulation engine providing fallback drive trees, multi-engine crawl data, sample duplicate groups, project clusters, and analytics data when live credentials are absent. | `getVirtualFolders()`, `getVirtualDuplicates()`, `getVirtualProjectClusters()`, `getVirtualColdStorage()`, `getVirtualAnalytics()` |
+| **`/src/components/Navbar.tsx`** | Top sticky header navigation bar with brand branding, tab selection menu, active job count badge, and mobile/desktop account authentication menu. | `Navbar` |
+| **`/src/components/DirectoryPane.tsx`** | Side-by-side folder explorer pane with provider switcher (Google Drive, OneDrive, Local Vault), interactive breadcrumb navigation, live search/filter, and selection toolbar. | `DirectoryPane` |
+| **`/src/components/CopyConfigModal.tsx`** | Transfer modal for configuring copy options (Deep Clone vs Merge, Skip/Overwrite/Rename conflicts, Preserve timestamps/permissions, Deduplication pre-check, Worker thread count slider). | `CopyConfigModal` |
+| **`/src/components/ActiveJobDashboard.tsx`** | Real-time transfer monitor featuring live MB/s speed charts, worker thread status gauges, file-by-file log stream, and pause/resume/cancel controls. | `ActiveJobDashboard` |
+| **`/src/components/JobHistoryTable.tsx`** | Filterable historic job audit table with execution status badges, detailed breakdown drawer, and 1-click JSON/CSV report export. | `JobHistoryTable` |
+| **`/src/components/StorageAnalyzer.tsx`** | Analytics hub containing sub-tabs for Multi-Engine Telemetry, Storage Treemaps, Smart Clustering, Deduplication Matrix, Waste Explorer, and Agentic Assistant. | `StorageAnalyzer` |
+| **`/src/components/StorageTreemap.tsx`** | D3 squarified treemap visualizer rendering area-proportional rectangles for folder storage consumption with interactive category color coding. | `StorageTreemap` |
+| **`/src/components/SmartProjectClustering.tsx`** | Gemini vector embedding (`text-embedding-004`) clusterer with Cosine Similarity math, 1-click physical folder consolidation, and interactive SVG Knowledge Graph node map. | `SmartProjectClustering` |
+| **`/src/components/DeduplicationMatrix.tsx`** | Cross-drive deduplication matrix combining zero-byte cryptographic hash matching (MD5/SHA-1/QuickXorHash), Rust-simulated stream hashing, Python ML `pHash` perceptual media matching, and interactive Visual Diff Drawer. | `DeduplicationMatrix` |
+| **`/src/components/EntropyAndWasteViewer.tsx`** | Waste & cold storage detector identifying abandoned build caches (`node_modules`, `.next`, `dist`), files untouched for $\ge 180$ days, and folder entropy scores. | `EntropyAndWasteViewer` |
+| **`/src/components/AgenticOrchestrator.tsx`** | Gemini ReAct agentic reasoning assistant accepting natural language migration prompts, generating step-by-step Human-in-the-Loop approval plans, and logging ReAct trace steps. | `AgenticOrchestrator` |
+| **`/src/components/MigrationGuides.tsx`** | Step-by-step migration guides for Google Drive to Google Drive, Google Drive to OneDrive, Cross-Domain Workspace migration, and Enterprise sync. | `MigrationGuides` |
+| **`/src/components/DocumentationViewer.tsx`** | Comprehensive documentation suite rendering Features, Algorithms, Multi-Architecture Matrix, HLD, LLD, and User Operating Manual inside the application interface. | `DocumentationViewer` |
 
 ---
 

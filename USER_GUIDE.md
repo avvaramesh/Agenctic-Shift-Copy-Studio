@@ -41,14 +41,45 @@ Welcome to **Shift Copy Studio**. This guide provides step-by-step instructions 
 
 ---
 
-## 4. Using the Agentic AI Migration Assistant
+## 5. Multi-Engine Telemetry & Crawl Diagnostics
 
-### How to Run Natural Language Migration Commands:
-1. Open **Storage Analyzer** $\rightarrow$ **Agentic AI Migration Assistant**.
-2. Type a natural language command into the prompt bar, e.g.:
-   > *"Find all research thesis PDFs in Google Drive from 2023, organize into OneDrive/Thesis_Vault/, and quarantine older duplicates."*
-3. Click **"Generate Plan"**.
-4. Review the **Human-in-the-Loop (HITL) Interactive Plan Checklist**.
-5. Check or uncheck individual steps. Destructive actions are unchecked by default for safety.
-6. Click **"Approve & Safely Execute"** to start the deterministic backend streaming copy.
-7. Click the **"Agent ReAct Trace"** tab to inspect the agent's step-by-step thinking loop.
+### How to Inspect High-Speed Crawl Performance:
+1. Click **Storage Analyzer** $\rightarrow$ **Multi-Engine Telemetry (Go/Rust/Python)**.
+2. Click **"Run Multi-Engine Drive Scan"** to simulate real-time telemetry updates.
+3. Observe live throughput stats:
+   - **Go Indexing Worker**: Displays Goroutine channel count and crawling speed (e.g., 14,200 items/sec).
+   - **Rust Deduplication Engine**: Displays zero-copy stream hashing rate (xxHash64 & SHA-256 at 1.8 GB/sec).
+   - **Python ML Intelligence Engine**: Displays perceptual hash computation speed (`pHash` DCT calculations) and TF-IDF topic vectorization latency.
+
+---
+
+## 6. Managing Active Transfers & Job Controls
+
+### How to Monitor & Control Background Streaming Jobs:
+1. Click **Active Transfers** in the top navigation bar.
+2. View real-time streaming speed graphs (MB/s), file progress counters, and active worker thread allocations.
+3. Use the control buttons:
+   - ⏸️ **Pause**: Temporarily halts streaming chunk transfers without losing progress.
+   - ▶️ **Resume**: Restores chunk streaming from the last offset.
+   - 🛑 **Cancel**: Safely terminates the job and cleans up temporary target buffers.
+4. Scroll through the **Live Streaming Log Console** to track individual file migration events in real time.
+
+---
+
+## 7. Transfer History & Exporting Audit Reports
+
+### How to Audit Past Migrations:
+1. Navigate to **Transfer History** from the top bar.
+2. Filter historic jobs by status (*Completed*, *Failed*, *Paused*, *In Progress*) or search by job ID or folder name.
+3. Click **"Download Audit Report"** to export execution logs as JSON or CSV files for compliance and record-keeping.
+
+---
+
+## 8. Storage Treemap & Waste Explorer
+
+### How to Reclaim Wasted Storage:
+1. Open **Storage Analyzer** $\rightarrow$ **Storage Treemap**.
+2. Hover over rectangles in the D3 squarified treemap to see file sizes and file type distribution.
+3. Click **Entropy & Waste Explorer** to view abandoned build caches (`node_modules`, `.next`, `dist`), stale video archives, and files untouched for $\ge 180$ days.
+4. Click **"Purge Selected Waste"** to perform instant space reclamation.
+
