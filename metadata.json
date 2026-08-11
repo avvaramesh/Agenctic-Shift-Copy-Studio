@@ -1,0 +1,6 @@
+{
+  "name": "Folder Copy Studio",
+  "description": "Intuitive folder copying and migration tool for Google Drive, local storage, and cloud drives with tree visualization and batch progress tracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
