@@ -25,6 +25,8 @@ import {
   ShieldAlert,
   Play,
   Layers,
+  Columns,
+  Rows,
 } from "lucide-react";
 
 export default function App() {
@@ -35,6 +37,8 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<
     "explorer" | "active_jobs" | "history" | "analyzer" | "guides" | "docs"
   >("explorer");
+
+  const [paneLayoutMode, setPaneLayoutMode] = useState<"side_by_side" | "stacked">("side_by_side");
 
   const [sourceFolder, setSourceFolder] = useState<SelectedFolderState | null>(null);
   const [targetFolder, setTargetFolder] = useState<SelectedFolderState | null>(null);
@@ -370,24 +374,80 @@ export default function App() {
 
         {/* Tab 1: Folder Explorer (Dual-Pane) */}
         {activeTab === "explorer" && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
-            <DirectoryPane
-              paneType="source"
-              user={sourceUser || user}
-              setUser={setSourceUser}
-              selectedFolder={sourceFolder}
-              onSelectFolder={(folder) => setSourceFolder(folder)}
-              onClearSelection={() => setSourceFolder(null)}
-            />
+          <div className="space-y-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-white border-2 border-black rounded-2xl p-3 shadow-[3px_3px_0px_0px_#000]">
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-[#4ECDC4] border border-black animate-pulse" />
+                <span className="text-xs font-black text-black uppercase tracking-wider">
+                  Dual-Pane Directory Explorer
+                </span>
+                <span className="hidden sm:inline text-[11px] font-black text-black bg-[#FFE66D] px-2 py-0.5 rounded-lg border border-black shadow-[1px_1px_0px_0px_#000]">
+                  Source (Left) ⟷ Target (Right)
+                </span>
+              </div>
 
-            <DirectoryPane
-              paneType="target"
-              user={targetUser || user}
-              setUser={setTargetUser}
-              selectedFolder={targetFolder}
-              onSelectFolder={(folder) => setTargetFolder(folder)}
-              onClearSelection={() => setTargetFolder(null)}
-            />
+              {/* View Mode Switcher */}
+              <div className="flex items-center gap-1.5 self-end sm:self-auto">
+                <span className="text-[10px] font-black uppercase text-gray-500 mr-1">Layout:</span>
+                <button
+                  type="button"
+                  onClick={() => setPaneLayoutMode("side_by_side")}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-black border-2 border-black cursor-pointer flex items-center gap-1.5 transition-all ${
+                    paneLayoutMode === "side_by_side"
+                      ? "bg-[#4ECDC4] text-black shadow-[2px_2px_0px_0px_#000]"
+                      : "bg-white text-gray-700 hover:bg-gray-100"
+                  }`}
+                  title="Side-by-Side 2-Column View"
+                >
+                  <Columns className="w-3.5 h-3.5 stroke-[2.5]" />
+                  <span>Side-by-Side</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setPaneLayoutMode("stacked")}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-black border-2 border-black cursor-pointer flex items-center gap-1.5 transition-all ${
+                    paneLayoutMode === "stacked"
+                      ? "bg-[#FF6B6B] text-white shadow-[2px_2px_0px_0px_#000]"
+                      : "bg-white text-gray-700 hover:bg-gray-100"
+                  }`}
+                  title="Stacked Single Column View"
+                >
+                  <Rows className="w-3.5 h-3.5 stroke-[2.5]" />
+                  <span>Stacked</span>
+                </button>
+              </div>
+            </div>
+
+            <div
+              className={
+                paneLayoutMode === "side_by_side"
+                  ? "grid grid-cols-2 gap-3 md:gap-6 w-full min-w-0"
+                  : "grid grid-cols-1 gap-4 w-full"
+              }
+            >
+              <div className="min-w-0">
+                <DirectoryPane
+                  paneType="source"
+                  user={sourceUser || user}
+                  setUser={setSourceUser}
+                  selectedFolder={sourceFolder}
+                  onSelectFolder={(folder) => setSourceFolder(folder)}
+                  onClearSelection={() => setSourceFolder(null)}
+                />
+              </div>
+
+              <div className="min-w-0">
+                <DirectoryPane
+                  paneType="target"
+                  user={targetUser || user}
+                  setUser={setTargetUser}
+                  selectedFolder={targetFolder}
+                  onSelectFolder={(folder) => setTargetFolder(folder)}
+                  onClearSelection={() => setTargetFolder(null)}
+                />
+              </div>
+            </div>
           </div>
         )}
 

@@ -39,48 +39,89 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b-4 border-black text-black shadow-[0px_4px_0px_0px_#000]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-        {/* Brand */}
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-[#FF6B6B] rounded-2xl flex items-center justify-center shadow-[3px_3px_0px_0px_#000] border-2 border-black">
-            <FolderSync className="w-6 h-6 text-white stroke-[3]" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-black tracking-tight text-black italic">
-                SHIFT <span className="text-sm not-italic font-bold bg-[#FFE66D] px-2 py-0.5 rounded-md border border-black shadow-[2px_2px_0px_0px_#000]">COPY STUDIO</span>
-              </h1>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col md:flex-row md:items-center justify-between gap-3">
+        {/* Top Row: Brand & User Auth */}
+        <div className="flex items-center justify-between w-full md:w-auto">
+          {/* Brand */}
+          <div
+            onClick={() => setActiveTab("explorer")}
+            className="flex items-center gap-3 cursor-pointer group"
+          >
+            <div className="w-11 h-11 bg-[#FF6B6B] rounded-2xl flex items-center justify-center shadow-[3px_3px_0px_0px_#000] border-2 border-black group-hover:rotate-6 transition-transform">
+              <FolderSync className="w-6 h-6 text-white stroke-[3]" />
             </div>
-            <p className="text-xs font-bold text-gray-600">High-speed Drive & Cloud folder migration</p>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-xl font-black tracking-tight text-black italic">
+                  SHIFT <span className="text-xs not-italic font-bold bg-[#FFE66D] px-2 py-0.5 rounded-md border border-black shadow-[2px_2px_0px_0px_#000]">COPY STUDIO</span>
+                </h1>
+              </div>
+              <p className="text-[10px] font-bold text-gray-600">Side-by-Side Cloud & Drive Migration</p>
+            </div>
+          </div>
+
+          {/* User Auth Section on Mobile */}
+          <div className="md:hidden flex items-center">
+            {user ? (
+              <div className="flex items-center gap-1.5 bg-white px-2.5 py-1 rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_#000]">
+                {user.photoURL ? (
+                  <img
+                    src={user.photoURL}
+                    alt={user.displayName || "User"}
+                    className="w-7 h-7 rounded-full border-2 border-black"
+                    referrerPolicy="no-referrer"
+                  />
+                ) : (
+                  <div className="w-7 h-7 rounded-full bg-[#FF6B6B] text-white border-2 border-black flex items-center justify-center font-black text-[10px]">
+                    {(user.displayName || user.email || "U")[0].toUpperCase()}
+                  </div>
+                )}
+                <button
+                  onClick={handleSignOut}
+                  title="Sign out"
+                  className="p-1 text-black hover:bg-[#FF6B6B] hover:text-white rounded-lg border border-black"
+                >
+                  <LogOut className="w-3.5 h-3.5 stroke-[2.5]" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={handleSignIn}
+                disabled={isAuthenticating}
+                className="bg-[#FFE66D] text-black px-3 py-1.5 rounded-xl text-[11px] font-black border-2 border-black shadow-[2px_2px_0px_0px_#000]"
+              >
+                Sign In
+              </button>
+            )}
           </div>
         </div>
 
-        {/* Navigation Tabs */}
-        <nav className="hidden md:flex items-center gap-2">
+        {/* Navigation Tabs Bar - Always Visible & Horizontally Scrollable */}
+        <nav className="flex items-center gap-2 overflow-x-auto pb-1 pt-1 scrollbar-none w-full md:w-auto">
           <button
             onClick={() => setActiveTab("explorer")}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-black transition-all border-2 border-black cursor-pointer ${
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-black transition-all border-2 border-black shrink-0 cursor-pointer ${
               activeTab === "explorer"
-                ? "bg-[#FFE66D] text-black shadow-[4px_4px_0px_0px_#000] translate-y-[-2px]"
+                ? "bg-[#FFE66D] text-black shadow-[3px_3px_0px_0px_#000] translate-y-[-2px]"
                 : "bg-white text-black shadow-[2px_2px_0px_0px_#000] hover:bg-slate-100"
             }`}
           >
             <HardDrive className="w-4 h-4 stroke-[2.5]" />
-            <span>Explorer</span>
+            <span>Dual-Pane Explorer</span>
           </button>
 
           <button
             onClick={() => setActiveTab("active_jobs")}
-            className={`relative flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-black transition-all border-2 border-black cursor-pointer ${
+            className={`relative flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-black transition-all border-2 border-black shrink-0 cursor-pointer ${
               activeTab === "active_jobs"
-                ? "bg-[#4ECDC4] text-black shadow-[4px_4px_0px_0px_#000] translate-y-[-2px]"
+                ? "bg-[#4ECDC4] text-black shadow-[3px_3px_0px_0px_#000] translate-y-[-2px]"
                 : "bg-white text-black shadow-[2px_2px_0px_0px_#000] hover:bg-slate-100"
             }`}
           >
             <FolderSync className={`w-4 h-4 stroke-[2.5] ${activeJobCount > 0 ? "animate-spin" : ""}`} />
-            <span>Transfers</span>
+            <span>Active Transfers</span>
             {activeJobCount > 0 && (
-              <span className="px-2 py-0.5 text-[10px] font-black rounded-full bg-[#FF6B6B] text-white border border-black shadow-[1px_1px_0px_0px_#000]">
+              <span className="px-1.5 py-0.2 text-[10px] font-black rounded-full bg-[#FF6B6B] text-white border border-black">
                 {activeJobCount}
               </span>
             )}
@@ -88,21 +129,21 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <button
             onClick={() => setActiveTab("history")}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-black transition-all border-2 border-black cursor-pointer ${
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-black transition-all border-2 border-black shrink-0 cursor-pointer ${
               activeTab === "history"
-                ? "bg-[#FF6B6B] text-white shadow-[4px_4px_0px_0px_#000] translate-y-[-2px]"
+                ? "bg-[#FF6B6B] text-white shadow-[3px_3px_0px_0px_#000] translate-y-[-2px]"
                 : "bg-white text-black shadow-[2px_2px_0px_0px_#000] hover:bg-slate-100"
             }`}
           >
             <History className="w-4 h-4 stroke-[2.5]" />
-            <span>History</span>
+            <span>Transfer History</span>
           </button>
 
           <button
             onClick={() => setActiveTab("analyzer")}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-black transition-all border-2 border-black cursor-pointer ${
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-black transition-all border-2 border-black shrink-0 cursor-pointer ${
               activeTab === "analyzer"
-                ? "bg-[#A29BFE] text-black shadow-[4px_4px_0px_0px_#000] translate-y-[-2px]"
+                ? "bg-[#A29BFE] text-black shadow-[3px_3px_0px_0px_#000] translate-y-[-2px]"
                 : "bg-white text-black shadow-[2px_2px_0px_0px_#000] hover:bg-slate-100"
             }`}
           >
@@ -112,31 +153,31 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <button
             onClick={() => setActiveTab("guides")}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-black transition-all border-2 border-black cursor-pointer ${
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-black transition-all border-2 border-black shrink-0 cursor-pointer ${
               activeTab === "guides"
-                ? "bg-[#FFE66D] text-black shadow-[4px_4px_0px_0px_#000] translate-y-[-2px]"
+                ? "bg-[#FFE66D] text-black shadow-[3px_3px_0px_0px_#000] translate-y-[-2px]"
                 : "bg-white text-black shadow-[2px_2px_0px_0px_#000] hover:bg-slate-100"
             }`}
           >
             <BookOpen className="w-4 h-4 stroke-[2.5]" />
-            <span>SEO Guides</span>
+            <span>Guides</span>
           </button>
 
           <button
             onClick={() => setActiveTab("docs")}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-black transition-all border-2 border-black cursor-pointer ${
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-black transition-all border-2 border-black shrink-0 cursor-pointer ${
               activeTab === "docs"
-                ? "bg-[#FF6B6B] text-white shadow-[4px_4px_0px_0px_#000] translate-y-[-2px]"
+                ? "bg-[#FF6B6B] text-white shadow-[3px_3px_0px_0px_#000] translate-y-[-2px]"
                 : "bg-white text-black shadow-[2px_2px_0px_0px_#000] hover:bg-slate-100"
             }`}
           >
             <FileCode className="w-4 h-4 stroke-[2.5]" />
-            <span>Feature Specs</span>
+            <span>Docs & Specs</span>
           </button>
         </nav>
 
-        {/* User Auth Section */}
-        <div className="flex items-center gap-3">
+        {/* User Auth Section Desktop */}
+        <div className="hidden md:flex items-center gap-3 shrink-0">
           {user ? (
             <div className="flex items-center gap-3 bg-white px-3.5 py-1.5 rounded-2xl border-2 border-black shadow-[3px_3px_0px_0px_#000]">
               <div className="flex items-center gap-2">
@@ -173,8 +214,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                     setIsAuthenticating(false);
                   }
                 }}
-                title="Switch Google Account (Prompt Account Picker)"
-                className="px-2 py-1 bg-[#FFE66D] text-black hover:bg-[#ffd633] text-[10px] font-black rounded-xl border-2 border-black transition-all cursor-pointer flex items-center gap-1 shadow-[1px_1px_0px_0px_#000]"
+                title="Switch Google Account"
+                className="px-2 py-1 bg-[#FFE66D] text-black hover:bg-[#ffd633] text-[10px] font-black rounded-xl border-2 border-black transition-all cursor-pointer shadow-[1px_1px_0px_0px_#000]"
               >
                 <span>Switch</span>
               </button>
@@ -190,7 +231,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               onClick={handleSignIn}
               disabled={isAuthenticating}
-              className="flex items-center gap-2 bg-[#FFE66D] text-black hover:bg-[#ffd633] px-5 py-2.5 rounded-2xl text-xs font-black border-2 border-black shadow-[4px_4px_0px_0px_#000] hover:translate-y-[-1px] transition-all cursor-pointer disabled:opacity-60"
+              className="flex items-center gap-2 bg-[#FFE66D] text-black hover:bg-[#ffd633] px-4 py-2 rounded-2xl text-xs font-black border-2 border-black shadow-[3px_3px_0px_0px_#000] hover:translate-y-[-1px] transition-all cursor-pointer disabled:opacity-60 shrink-0"
             >
               {isAuthenticating ? (
                 <Loader2 className="w-4 h-4 text-black animate-spin" />
@@ -202,7 +243,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
                 </svg>
               )}
-              <span>{isAuthenticating ? "Connecting..." : "Sign in with Google"}</span>
+              <span>{isAuthenticating ? "Connecting..." : "Sign in"}</span>
             </button>
           )}
         </div>
