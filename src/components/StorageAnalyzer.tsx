@@ -5,6 +5,7 @@ import { DeduplicationMatrix } from "./DeduplicationMatrix";
 import { EntropyAndWasteViewer } from "./EntropyAndWasteViewer";
 import { SmartRecommendations } from "./SmartRecommendations";
 import { SmartProjectClustering } from "./SmartProjectClustering";
+import { AgenticOrchestrator } from "./AgenticOrchestrator";
 import {
   HardDrive,
   PieChart,
@@ -34,6 +35,7 @@ import {
   Check,
   FolderArchive,
   ShieldAlert,
+  Bot,
 } from "lucide-react";
 
 interface StorageAnalyzerProps {
@@ -92,7 +94,7 @@ export const StorageAnalyzer: React.FC<StorageAnalyzerProps> = ({
   onSwitchToExplorer,
 }) => {
   const [activeSubTab, setActiveSubTab] = useState<
-    "overview" | "treemap" | "matrix" | "entropy" | "clustering" | "recommendations" | "engines" | "correlation" | "cross_account" | "heavy_files"
+    "overview" | "agentic" | "treemap" | "matrix" | "entropy" | "clustering" | "recommendations" | "engines" | "correlation" | "cross_account" | "heavy_files"
   >("overview");
 
   const [isScanning, setIsScanning] = useState(false);
@@ -380,6 +382,18 @@ export const StorageAnalyzer: React.FC<StorageAnalyzerProps> = ({
         </button>
 
         <button
+          onClick={() => setActiveSubTab("agentic")}
+          className={`px-4 py-2 rounded-2xl text-xs font-black border-2 border-black transition-all cursor-pointer flex items-center gap-2 ${
+            activeSubTab === "agentic"
+              ? "bg-[#FF6B6B] text-white shadow-[3px_3px_0px_0px_#000] translate-y-[-2px]"
+              : "bg-white text-gray-700 hover:bg-slate-100"
+          }`}
+        >
+          <Bot className="w-4 h-4 stroke-[2.5]" />
+          <span>Agentic AI Migration Assistant</span>
+        </button>
+
+        <button
           onClick={() => setActiveSubTab("treemap")}
           className={`px-4 py-2 rounded-2xl text-xs font-black border-2 border-black transition-all cursor-pointer flex items-center gap-2 ${
             activeSubTab === "treemap"
@@ -496,6 +510,16 @@ export const StorageAnalyzer: React.FC<StorageAnalyzerProps> = ({
             if (onSwitchToExplorer) {
               onSwitchToExplorer();
             }
+          }}
+        />
+      )}
+
+      {/* NEW TAB: AGENTIC AI MIGRATION ORCHESTRATOR */}
+      {activeSubTab === "agentic" && (
+        <AgenticOrchestrator
+          onExecutePlan={(approvedSteps) => {
+            const bytesFreed = approvedSteps.reduce((acc, s) => acc + (s.sizeBytes || 0), 0);
+            setTotalUsedBytes((prev) => Math.max(1_000_000_000, prev - bytesFreed));
           }}
         />
       )}

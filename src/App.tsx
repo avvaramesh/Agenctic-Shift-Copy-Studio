@@ -14,6 +14,7 @@ import { ActiveJobDashboard } from "./components/ActiveJobDashboard";
 import { JobHistoryTable } from "./components/JobHistoryTable";
 import { StorageAnalyzer } from "./components/StorageAnalyzer";
 import { MigrationGuides } from "./components/MigrationGuides";
+import { DocumentationViewer } from "./components/DocumentationViewer";
 import {
   FolderSync,
   ArrowRight,
@@ -31,7 +32,9 @@ export default function App() {
   const [sourceUser, setSourceUser] = useState<UserProfile | null>(null);
   const [targetUser, setTargetUser] = useState<UserProfile | null>(null);
 
-  const [activeTab, setActiveTab] = useState<"explorer" | "active_jobs" | "history" | "analyzer" | "guides">("explorer");
+  const [activeTab, setActiveTab] = useState<
+    "explorer" | "active_jobs" | "history" | "analyzer" | "guides" | "docs"
+  >("explorer");
 
   const [sourceFolder, setSourceFolder] = useState<SelectedFolderState | null>(null);
   const [targetFolder, setTargetFolder] = useState<SelectedFolderState | null>(null);
@@ -450,6 +453,9 @@ export default function App() {
             onSwitchToExplorer={() => setActiveTab("explorer")}
           />
         )}
+
+        {/* Tab 6: Complete Feature Specifications & Documentation */}
+        {activeTab === "docs" && <DocumentationViewer />}
       </main>
 
       {/* Floating Background Copy Status Bar */}

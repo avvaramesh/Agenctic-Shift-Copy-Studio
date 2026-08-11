@@ -1,13 +1,13 @@
 import React from "react";
 import { UserProfile } from "../types";
 import { signInWithGoogle, signOutGoogle } from "../lib/firebase";
-import { FolderSync, HardDrive, History, LogOut, CheckCircle2, ShieldAlert, Sparkles, Loader2, PieChart, BookOpen } from "lucide-react";
+import { FolderSync, HardDrive, History, LogOut, CheckCircle2, ShieldAlert, Sparkles, Loader2, PieChart, BookOpen, FileCode } from "lucide-react";
 
 interface NavbarProps {
   user: UserProfile | null;
   setUser: React.Dispatch<React.SetStateAction<UserProfile | null>>;
-  activeTab: "explorer" | "active_jobs" | "history" | "analyzer" | "guides";
-  setActiveTab: (tab: "explorer" | "active_jobs" | "history" | "analyzer" | "guides") => void;
+  activeTab: "explorer" | "active_jobs" | "history" | "analyzer" | "guides" | "docs";
+  setActiveTab: (tab: "explorer" | "active_jobs" | "history" | "analyzer" | "guides" | "docs") => void;
   activeJobCount: number;
 }
 
@@ -120,6 +120,18 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <BookOpen className="w-4 h-4 stroke-[2.5]" />
             <span>SEO Guides</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("docs")}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-black transition-all border-2 border-black cursor-pointer ${
+              activeTab === "docs"
+                ? "bg-[#FF6B6B] text-white shadow-[4px_4px_0px_0px_#000] translate-y-[-2px]"
+                : "bg-white text-black shadow-[2px_2px_0px_0px_#000] hover:bg-slate-100"
+            }`}
+          >
+            <FileCode className="w-4 h-4 stroke-[2.5]" />
+            <span>Feature Specs</span>
           </button>
         </nav>
 
