@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 
 export const DocumentationViewer: React.FC = () => {
-  const [docTab, setDocTab] = useState<"features" | "algorithms" | "multi_arch" | "hld" | "lld" | "user_guide">("features");
+  const [docTab, setDocTab] = useState<"features" | "algorithms" | "multi_arch" | "ui_map" | "hld" | "lld" | "user_guide" | "agent_spec">("features");
   const [searchQuery, setSearchQuery] = useState("");
   const [copied, setCopied] = useState(false);
 
@@ -220,6 +220,16 @@ Shift Copy Studio is an enterprise-grade cloud storage migration and intelligent
 3. Multi-Tier Runtime System Tier: React 18 SPA + Express Memory Proxy + Cloud Run Container Gateway (Port 3000)
 4. Multi-Layer Security Tier: Air-gapped skill execution + Human-in-the-Loop approval + SHA-256 verification + 30-day quarantine vault`;
     }
+    if (docTab === "ui_map") {
+      return `# SHIFT COPY STUDIO: UI-TO-CODE TRACE MATRIX & ARCHITECTURAL MAP
+
+1. Dual-Pane Directory Explorer: DirectoryPane.tsx -> handleInitiateCopy() -> POST /api/drive/copy
+2. Interactive Storage Web Graph: StorageWebGraph.tsx -> force-directed 2D physics simulation + Canvas/SVG Pan & Zoom
+3. Cross-Drive Deduplication Matrix: DeduplicationMatrix.tsx -> runDedupeScan() -> POST /api/dedupe/scan (xxHash64 & pHash)
+4. Gemini AI Project Clustering: SmartProjectClustering.tsx -> text-embedding-004 vector embeddings + Cosine Similarity
+5. Agentic AI Migration Assistant: AgenticOrchestrator.tsx -> ReAct reasoning loop -> HILP Safety Policy Checklist
+6. Storage Treemap & Multi-Engine Telemetry: StorageTreemap.tsx & EntropyAndWasteViewer.tsx -> D3 Squarified Tiling + Go/Rust/Python Workers`;
+    }
     if (docTab === "agent_spec") {
       return `# AGENTIC ORCHESTRATOR TECHNICAL SPECIFICATION & ARCHITECTURE DESIGN\n\n1. State Graph DAG Orchestration Loop: Nodes for Intent Parsing, Storage Exploration, Strategy Synthesis, HILP Safety Gate, Execution, and Reflection.\n2. Model Context Protocol (MCP) Tool Integration: Standardized tool skill schema across Go crawler, Rust stream hashing, Python ML pHash, and Gemini AI.\n3. Human-in-the-Loop Permissions (HILP): Risk Tiers 0-2, circuit breaker safety gates (volume & destructive ratio limits), and parametric step overrides.\n4. Ever-Evolving Memory Engine: Short-Term ReAct scratchpad + Long-Term Policy Vault & Negative Examples catalog.\n5. Deterministic Evals Framework: Quantitative benchmarks for Safety Compliance (100%), Plan Precision (>=90%), Human Acceptance Rate (>=85%), and Execution Success Rate (>=98%).`;
     }
@@ -295,6 +305,18 @@ Exhaustive breakdown for Dual-Pane Explorer, Deduplication Matrix, Gemini Projec
         >
           <Workflow className="w-4 h-4" />
           <span>Multi-Architecture Matrix</span>
+        </button>
+
+        <button
+          onClick={() => setDocTab("ui_map")}
+          className={`px-4 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-2 ${
+            docTab === "ui_map"
+              ? "bg-[#FFE66D] text-black shadow-[2px_2px_0px_0px_#000]"
+              : "text-gray-700 hover:text-black"
+          }`}
+        >
+          <FileCode className="w-4 h-4" />
+          <span>UI-to-Code Trace Matrix</span>
         </button>
 
         <button

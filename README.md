@@ -261,7 +261,8 @@ Shift Copy Studio employs tailored algorithms across data integrity, media match
 | **`/src/components/CopyConfigModal.tsx`** | Transfer modal for configuring copy options (Deep Clone vs Merge, Skip/Overwrite/Rename conflicts, Preserve timestamps/permissions, Deduplication pre-check, Worker thread count slider). | `CopyConfigModal` |
 | **`/src/components/ActiveJobDashboard.tsx`** | Real-time transfer monitor featuring live MB/s speed charts, worker thread status gauges, file-by-file log stream, and pause/resume/cancel controls. | `ActiveJobDashboard` |
 | **`/src/components/JobHistoryTable.tsx`** | Filterable historic job audit table with execution status badges, detailed breakdown drawer, and 1-click JSON/CSV report export. | `JobHistoryTable` |
-| **`/src/components/StorageAnalyzer.tsx`** | Analytics hub containing sub-tabs for Multi-Engine Telemetry, Storage Treemaps, Smart Clustering, Deduplication Matrix, Waste Explorer, and Agentic Assistant. | `StorageAnalyzer` |
+| **`/src/components/StorageAnalyzer.tsx`** | Analytics hub containing sub-tabs for Interactive Storage Web Graph, Multi-Engine Telemetry, Storage Treemaps, Smart Clustering, Deduplication Matrix, Waste Explorer, and Agentic Assistant. | `StorageAnalyzer` |
+| **`/src/components/StorageWebGraph.tsx`** | Interactive 2D force-directed storage web and knowledge graph visualizer with SVG/Canvas pan & zoom, Coulomb repulsion, drag physics, and multi-cloud linkage filters. | `StorageWebGraph` |
 | **`/src/components/StorageTreemap.tsx`** | D3 squarified treemap visualizer rendering area-proportional rectangles for folder storage consumption with interactive category color coding. | `StorageTreemap` |
 | **`/src/components/SmartProjectClustering.tsx`** | Gemini vector embedding (`text-embedding-004`) clusterer with Cosine Similarity math, 1-click physical folder consolidation, and interactive SVG Knowledge Graph node map. | `SmartProjectClustering` |
 | **`/src/components/DeduplicationMatrix.tsx`** | Cross-drive deduplication matrix combining zero-byte cryptographic hash matching (MD5/SHA-1/QuickXorHash), Rust-simulated stream hashing, Python ML `pHash` perceptual media matching, and interactive Visual Diff Drawer. | `DeduplicationMatrix` |
@@ -292,6 +293,7 @@ For detailed architectural, API, and engineering specifications, refer to the in
 
 | Document Artifact | Focus & Audience | Key Contents |
 | :--- | :--- | :--- |
+| [**`UI_TO_CODE_MAP.md`**](./UI_TO_CODE_MAP.md) | Technical Evaluators & Reviewers | Complete 1-to-1 trace matrix mapping UI components, React hooks, event handlers, Express API endpoints, and TypeScript models across all 6 core modules. |
 | [**`AGENTIC_ORCHESTRATOR_SPEC.md`**](./AGENTIC_ORCHESTRATOR_SPEC.md) | Agent System Architecture | State Graph DAG topology, Model Context Protocol (MCP) skill registry, HILP safety policies, memory layers, and 5-metric Evals framework. |
 | [**`HLD.md`**](./HLD.md) | High-Level Architecture | Cloud Run container boundary, multi-cloud OAuth flow, memory-only byte streaming, and multi-engine worker integration. |
 | [**`LLD.md`**](./LLD.md) | Low-Level Engineering | Full TypeScript interfaces, Express backend API route schemas, and state update algorithms. |

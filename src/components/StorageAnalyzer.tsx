@@ -6,6 +6,7 @@ import { EntropyAndWasteViewer } from "./EntropyAndWasteViewer";
 import { SmartRecommendations } from "./SmartRecommendations";
 import { SmartProjectClustering } from "./SmartProjectClustering";
 import { AgenticOrchestrator } from "./AgenticOrchestrator";
+import { StorageWebGraph } from "./StorageWebGraph";
 import {
   HardDrive,
   PieChart,
@@ -94,7 +95,7 @@ export const StorageAnalyzer: React.FC<StorageAnalyzerProps> = ({
   onSwitchToExplorer,
 }) => {
   const [activeSubTab, setActiveSubTab] = useState<
-    "overview" | "agentic" | "treemap" | "matrix" | "entropy" | "clustering" | "recommendations" | "engines" | "correlation" | "cross_account" | "heavy_files"
+    "overview" | "agentic" | "web_graph" | "treemap" | "matrix" | "entropy" | "clustering" | "recommendations" | "engines" | "correlation" | "cross_account" | "heavy_files"
   >("overview");
 
   const [isScanning, setIsScanning] = useState(false);
@@ -394,6 +395,18 @@ export const StorageAnalyzer: React.FC<StorageAnalyzerProps> = ({
         </button>
 
         <button
+          onClick={() => setActiveSubTab("web_graph")}
+          className={`px-4 py-2 rounded-2xl text-xs font-black border-2 border-black transition-all cursor-pointer flex items-center gap-2 ${
+            activeSubTab === "web_graph"
+              ? "bg-[#FFE66D] text-black shadow-[3px_3px_0px_0px_#000] translate-y-[-2px]"
+              : "bg-white text-gray-700 hover:bg-slate-100"
+          }`}
+        >
+          <Network className="w-4 h-4 stroke-[2.5]" />
+          <span>Interactive Storage Web Graph</span>
+        </button>
+
+        <button
           onClick={() => setActiveSubTab("treemap")}
           className={`px-4 py-2 rounded-2xl text-xs font-black border-2 border-black transition-all cursor-pointer flex items-center gap-2 ${
             activeSubTab === "treemap"
@@ -511,6 +524,19 @@ export const StorageAnalyzer: React.FC<StorageAnalyzerProps> = ({
               onSwitchToExplorer();
             }
           }}
+        />
+      )}
+
+      {/* NEW TAB: STORAGE WEB GRAPH */}
+      {activeSubTab === "web_graph" && (
+        <StorageWebGraph
+          user={user}
+          onSelectForTransfer={(folder) => {
+            if (onSelectForTransfer) {
+              onSelectForTransfer(folder);
+            }
+          }}
+          onSwitchToExplorer={onSwitchToExplorer}
         />
       )}
 
