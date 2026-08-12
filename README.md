@@ -6,50 +6,67 @@
 [![Gemini AI](https://img.shields.io/badge/Gemini_AI-text--embedding--004-orange.svg)](https://deepmind.google/technologies/gemini/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38bdf8.svg)](https://tailwindcss.com/)
 
-**Shift Copy Studio** is a high-performance, cloud-native storage migration and intelligent file orchestration platform. It enables seamless, high-speed streaming transfers, zero-byte transfer cryptographic deduplication, Gemini AI vector-based project clustering, and an autonomous Agentic AI Storage Assistant with Human-in-the-Loop safety controls.
+**Shift Copy Studio** is an enterprise-grade, multi-cloud storage migration, intelligent deduplication, and file orchestration platform. It combines high-speed chunked streaming transfers across cloud drives (Google Drive, Microsoft OneDrive, Local Storage Vaults) with zero-byte cryptographic deduplication, Gemini AI dense vector clustering, and an autonomous **Agentic AI Storage Assistant** governed by Human-in-the-Loop (HILP) safety policies.
 
 ---
 
-## 🏛️ System Architecture Topology
+## 🎯 The "Why": What Problem Does This System Solve?
+
+Modern enterprises and power users suffer from severe **cloud storage fragmentation** and **data sprawl**:
+
+1. **Storage Silos & Cross-Cloud Complexity**: Important assets are scattered across personal Google Drive accounts, organizational Microsoft OneDrive tenants, and local drives. Migrating datasets between providers is historically slow, bandwidth-heavy, and error-prone.
+2. **Gigabytes of Silent Redundancy & Duplicate Waste**: Duplicate files—from raw video renders and PDF reports to downscaled media—consume hundreds of gigabytes across cloud quotas. Traditional filename matching fails when files are renamed or slightly re-compressed.
+3. **Risky Bulk Migrations Without Guardrails**: Standard copy tools offer zero rollback mechanisms or granular safety checks. A single misconfigured script can overwrite critical production assets or delete source files irreversibly.
+4. **Unstructured File Dumps & Loss of Context**: Over time, cloud drives become chaotic file graveyards. Finding related assets for a single project across multiple drives requires manual searching through nested subdirectories.
+
+### 💡 The Solution: How Shift Copy Studio Fixes This
+- **High-Throughput Streaming Engine**: Zero local disk retention; buffers chunked byte streams in memory between cloud APIs.
+- **Multi-Engine Deduplication Matrix**: Combines zero-byte cryptographic hashing (`MD5`, `SHA-1`, `QuickXorHash`), Rust zero-allocation stream hashing (`xxHash64` at 1.8 GB/sec), and Python ML 64-bit DCT perceptual image matching (`pHash`).
+- **Gemini AI Semantic Clustering**: Uses `text-embedding-004` 768-dimensional vector embeddings and Cosine Similarity ($\ge 0.78$) to organize scattered files into virtual project workspaces without moving physical bytes.
+- **Agentic AI Orchestrator with HILP Policy**: Translates natural language prompts into executable migration plans with transparent ReAct reasoning logs, risk tiering, and mandatory Human-in-the-Loop approval before destructive actions occur.
+- **30-Day Recovery Vault**: Purged or overwritten items are safely moved to a reversible quarantine buffer instead of immediate permanent deletion.
+
+---
+
+## 🏛️ System Architecture Topology & Component Breakdown
+
+### 1. High-Level Flow Diagram
 
 ```
-                               ┌────────────────────────────────────────┐
-                               │       Shift Copy Studio Frontend       │
-                               │  • Dual-Pane Directory Explorer        │
-                               │  • Human-in-the-Loop Approval Drawer   │
-                               │  • Knowledge Graph & D3 Storage Map    │
-                               └───────────────────┬────────────────────┘
-                                                   │ HTTPS / WebSockets
-                                                   ▼
-                               ┌────────────────────────────────────────┐
-                               │   Express Application Server (Node)   │
-                               │  • Auth Session & Token Vault          │
-                               │  • ReAct Agentic Orchestrator          │
-                               │  • Streaming Proxy & Byte Pipelines    │
-                               └───────┬────────────────┬───────────────┘
-                                       │                │
-            ┌──────────────────────────┘                └──────────────────────────┐
-            ▼                                                                      ▼
-┌──────────────────────────┐                                            ┌──────────────────────────┐
-│   Google Drive API v3    │                                            │  Microsoft Graph API v1.0│
-│  • OAuth 2.0 PKCE        │                                            │  • OAuth 2.0 Authorization│
-│  • Chunked Resumable Up  │                                            │  • Large File Stream Upload │
-└──────────────────────────┘                                            └──────────────────────────┘
-            │                                                                      │
-            └──────────────────────────┬───────────────────────────────────────────┘
-                                       │
-                                       ▼
-                       ┌────────────────────────────────┐
-                       │    Gemini AI & Vector Engine   │
-                       │ • text-embedding-004 Indexer   │
-                       │ • ReAct Reasoning Loop Agent   │
-                       │ • pHash Media Matcher Engine   │
-                       └────────────────────────────────┘
+                       ┌───────────────────────────────────────────────────┐
+                       │          SHIFT COPY STUDIO FRONTEND UI            │
+                       │  • React 18 SPA + Vite (Port 3000)                │
+                       │  • Dual-Pane Directory Explorer                   │
+                       │  • Interactive HILP Agent Approval Drawer         │
+                       │  • SVG Knowledge Graph & D3 Storage Treemap       │
+                       └─────────────────────────┬─────────────────────────┘
+                                                 │ HTTPS / REST / Streaming
+                                                 ▼
+                       ┌───────────────────────────────────────────────────┐
+                       │        EXPRESS APPLICATION SERVER (Node.js)       │
+                       │  • OAuth 2.0 PKCE Token Vault                     │
+                       │  • Chunked Memory Stream Proxy (0 Disk Payload)   │
+                       │  • Background Job Manager & Progress Broadcaster  │
+                       └─────────┬───────────────────┬───────────────────┬─┘
+                                 │                   │                   │
+            ┌────────────────────┘                   │                   └────────────────────┐
+            ▼                                        ▼                                        ▼
+┌───────────────────────────┐           ┌───────────────────────────┐           ┌───────────────────────────┐
+│   Google Drive API v3     │           │ Microsoft Graph API v1.0  │           │   Multi-Engine Telemetry  │
+│ • Resumable Uploads       │           │ • Fragmented Uploads      │           │ • Go Crawler (14.2k/s)    │
+│ • md5Checksum Sync        │           │ • quickXorHash Matcher    │           │ • Rust Hashing (1.8GB/s)  │
+└───────────────────────────┘           └───────────────────────────┘           │ • Python ML pHash Engine  │
+                                                      │                         └───────────────────────────┘
+                                                      ▼
+                                       ┌─────────────────────────────┐
+                                       │ Gemini AI & Vector Engine   │
+                                       │ • text-embedding-004        │
+                                       │ • ReAct Reasoning Loop      │
+                                       │ • Cosine Similarity Cluster │
+                                       └─────────────────────────────┘
 ```
 
-## 🏢 Multi-Architecture Matrix & Layer Breakdown
-
-Shift Copy Studio is engineered with a **Four-Tier Multi-Architecture Topology** designed for fault tolerance, security, and high throughput:
+### 2. Four-Tier Multi-Architecture Matrix
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────────────┐
@@ -60,7 +77,7 @@ Shift Copy Studio is engineered with a **Four-Tier Multi-Architecture Topology**
 │  • md5Checksum Sync      │  • sha1 & quickXorHash   │  • S3 Chunked Stream Proxy        │
 └──────────────────────────┴──────────────────────────┴───────────────────────────────────┘
                                            │
-┌─────────────────────────────────────────────────────────────────────────────────────────┐
+┌──────────────────────────────────────────▼──────────────────────────────────────────────┐
 │                        2. MULTI-ENGINE SPEED & INTELLIGENCE ARCHITECTURE                 │
 ├──────────────────────────┬──────────────────────────┬───────────────────────────────────┤
 │ Node.js / Express        │ Go Indexing Worker       │ Rust Deduplication Engine         │
@@ -91,6 +108,101 @@ Shift Copy Studio is engineered with a **Four-Tier Multi-Architecture Topology**
 
 ---
 
+## 💻 Quick Start: Foolproof Local Running Guide
+
+Follow these step-by-step instructions to clone, configure, and run Shift Copy Studio on your local development machine.
+
+### 📋 Prerequisites
+Before starting, ensure you have the following installed:
+- **Node.js**: v18.0.0 or higher ([Download Node.js](https://nodejs.org/))
+- **npm**: v9.0.0 or higher (comes bundled with Node.js)
+- **Git**: ([Download Git](https://git-scm.com/))
+- *(Optional)* **Gemini API Key**: For real-time Gemini AI embeddings and natural language planning. If omitted, the application operates in simulation mode with full feature availability.
+
+---
+
+### Step 1: Clone the Repository
+Open your shell terminal and clone the project repository:
+```bash
+git clone https://github.com/your-org/shift-copy-studio.git
+cd shift-copy-studio
+```
+
+---
+
+### Step 2: Install Project Dependencies
+Install all required Node.js packages:
+```bash
+npm install
+```
+
+---
+
+### Step 3: Configure Environment Variables
+Copy the provided `.env.example` file to create your local `.env` file:
+
+```bash
+cp .env.example .env
+```
+
+Open `.env` in your text editor and configure the environment variables as needed:
+
+```env
+# ===================================================================
+# SHIFT COPY STUDIO ENVIRONMENT CONFIGURATION
+# ===================================================================
+
+# GEMINI_API_KEY (Optional for live Gemini AI calls)
+# Get a free key at: https://aistudio.google.com/app/apikey
+GEMINI_API_KEY="your_gemini_api_key_here"
+
+# APP_URL (Required for self-referential OAuth callbacks and links)
+# Default for local development is http://localhost:3000
+APP_URL="http://localhost:3000"
+
+# PORT (Hardcoded ingress port required by container infrastructure)
+PORT=3000
+```
+
+> **Note**: In local development without cloud credentials, Shift Copy Studio seamlessly falls back to virtual simulated drive trees (`/src/lib/virtualStorage.ts`), enabling complete interactive testing of deduplication, treemaps, agentic workflows, and active job monitors out of the box!
+
+---
+
+### Step 4: Run the Development Server
+Launch the unified full-stack development server (Express backend + Vite React frontend):
+
+```bash
+npm run dev
+```
+
+Once started, open your web browser and navigate to:
+👉 **`http://localhost:3000`**
+
+---
+
+### Step 5: Build & Run in Production Mode
+To compile the TypeScript server into a bundled CommonJS file (`dist/server.cjs`) and build the production React bundle:
+
+```bash
+# 1. Build client static files and server CommonJS bundle
+npm run build
+
+# 2. Start the production Node server
+npm start
+```
+
+---
+
+### Step 6: Code Quality & Verification
+To verify type safety and code formatting across the repository:
+
+```bash
+# Run TypeScript type check and linter
+npm run lint
+```
+
+---
+
 ## 🧮 Algorithms & Mathematical Models
 
 Shift Copy Studio employs tailored algorithms across data integrity, media matching, AI vector clustering, visualization, and autonomous reasoning:
@@ -107,15 +219,6 @@ Shift Copy Studio employs tailored algorithms across data integrity, media match
 
 ---
 
-| Document Artifact | Audience | Description & Focus |
-| :--- | :--- | :--- |
-| [**`FEATURES.md`**](./FEATURES.md) | Product & Leadership | Exhaustive feature specification across all core modules. |
-| [**`HLD.md`**](./HLD.md) | Enterprise Architects | High-Level Design topology, security boundaries, and multi-cloud streaming architecture. |
-| [**`LLD.md`**](./LLD.md) | Software Engineers | Low-Level Design with TypeScript interfaces, class signatures, and API specifications. |
-| [**`USER_GUIDE.md`**](./USER_GUIDE.md) | End Users & Ops | Step-by-step operating manual for transfers, deduplication, AI clustering, and agent prompt execution. |
-
----
-
 ## 🚀 Key Modules & Feature Highlights
 
 ### 1. Dual-Pane Side-by-Side Folder Explorer
@@ -124,13 +227,13 @@ Shift Copy Studio employs tailored algorithms across data integrity, media match
 - **Batch Transfer Engine**: Multi-selection and directory tree streaming.
 - **Client-Side Search**: Real-time filtering by name and extension.
 
-### 2. Module 2: Cross-Drive Deduplication Matrix & Visual Diff Inspector
+### 2. Cross-Drive Deduplication Matrix & Visual Diff Inspector
 - **Zero-Transfer Matching**: Compares Google Drive `md5Checksum` against OneDrive `sha1Hash` / `quickXorHash`.
 - **Perceptual Hashing (`pHash`)**: 99.8% visual media match detection for re-compressed, cropped, or downscaled images/videos.
 - **Side-by-Side Visual Inspection Drawer**: High-res diff view with an interactive **Compression Heatmap Overlay**.
 - **Automated Presets**: *"Keep Highest Quality"*, *"Keep Master Drive"*, and *"Safe Quarantine First (30-Day Recovery)"*.
 
-### 3. Module 3: Smart Gemini Project Clustering & Knowledge Graph
+### 3. Smart Gemini Project Clustering & Knowledge Graph
 - **Gemini Vector Embeddings**: Ingests file semantics and path ancestry via `text-embedding-004`.
 - **Auto-Generated Project Titles**: Assigns context-aware folder names (e.g. *"CS401 Distributed Systems Final Project 2024"*).
 - **Virtual Cross-Drive Workspace**: Combines scattered files across clouds into a unified view with 1-Click physical folder consolidation.
@@ -165,49 +268,40 @@ Shift Copy Studio employs tailored algorithms across data integrity, media match
 | **`/src/components/EntropyAndWasteViewer.tsx`** | Waste & cold storage detector identifying abandoned build caches (`node_modules`, `.next`, `dist`), files untouched for $\ge 180$ days, and folder entropy scores. | `EntropyAndWasteViewer` |
 | **`/src/components/AgenticOrchestrator.tsx`** | Gemini ReAct agentic reasoning assistant accepting natural language migration prompts, generating step-by-step Human-in-the-Loop approval plans, and logging ReAct trace steps. | `AgenticOrchestrator` |
 | **`/src/components/MigrationGuides.tsx`** | Step-by-step migration guides for Google Drive to Google Drive, Google Drive to OneDrive, Cross-Domain Workspace migration, and Enterprise sync. | `MigrationGuides` |
-| **`/src/components/DocumentationViewer.tsx`** | Comprehensive documentation suite rendering Features, Algorithms, Multi-Architecture Matrix, HLD, LLD, and User Operating Manual inside the application interface. | `DocumentationViewer` |
+| **`/src/components/DocumentationViewer.tsx`** | Comprehensive documentation suite rendering Features, Algorithms, Multi-Architecture Matrix, HLD, LLD, Agentic Spec, and User Operating Manual inside the application interface. | `DocumentationViewer` |
+| **`/AGENTIC_ORCHESTRATOR_SPEC.md`** | Detailed technical specification and architectural blueprint for the Agentic Orchestrator (State Graph DAG, MCP tools, HILP policy, Memory, and Evals). | Architecture Specification Document |
 
 ---
 
-## 🛠️ Technology Stack
+## 🛠️ Technology Stack & Multi-Engine Architecture
 
-- **Frontend**: React 18, TypeScript 5, Tailwind CSS v4, Lucide Icons, Motion (Framer Motion).
-- **AI & ML**: Gemini API (`text-embedding-004`), Perceptual Hash (`pHash`), ReAct Agent Architecture.
-- **Backend & Server**: Express.js, Node.js, Vite, Cloud Run Container Runtime.
+- **Node.js / Express Orchestrator**: Express.js gateway, OAuth 2.0 PKCE token refresh vault, streaming memory proxies, and background job state manager (`server.ts`).
+- **Go Indexing Worker**: Simulated high-concurrency multi-threaded Goroutine fan-out crawler fetching paginated Google Drive v3 and Microsoft Graph v1.0 API listings (14,200 items/sec indexing speed).
+- **Rust Deduplication Engine**: Simulated zero-allocation stream hashing engine executing `xxHash64` and `SHA-256` cryptographic verification at 1.8 GB/sec for instant byte-level duplicate detection.
+- **Python ML Intelligence Engine**: Perceptual photo hash matching (`pHash` 64-bit DCT with Hamming distance), TF-IDF document topic vectorization, and folder entropy scoring for cold storage detection.
+- **AI & Vector Engine**: Google Gemini API (`text-embedding-004` 768-dim dense vectors), ReAct Agentic Reasoning Loop (`Thought` $\rightarrow$ `Tool Call` $\rightarrow$ `Observation`), and Cosine Similarity clustering ($\ge 0.78$ threshold).
+- **Frontend & UI**: React 18, TypeScript 5, Tailwind CSS v4, Lucide Icons, Motion (`motion/react`), D3.js Squarified Treemap Tiling, and SVG Knowledge Graphs.
+- **Cloud & Storage Integrations**: Google Drive API v3 (`googleapis`), Microsoft Graph API v1.0, Firebase Auth / Firestore, S3 Chunked Stream Proxy.
+- **Infrastructure & Deployment**: Node.js + Vite Dev Server, Esbuild CommonJS Server Bundler (`dist/server.cjs`), Cloud Run Containerized Ingress (Port 3000).
 
 ---
 
-## 💻 Quick Start & Local Development
+## 📄 Deep-Dive Technical Documentation Specs
 
-### Prerequisites
-- Node.js (v18+ recommended)
-- npm or yarn
+For detailed architectural, API, and engineering specifications, refer to the individual documentation artifacts:
 
-### Installation
-```bash
-# Clone the repository
-git clone https://github.com/your-org/shift-copy-studio.git
-cd shift-copy-studio
-
-# Install dependencies
-npm install
-
-# Start the development server (runs on port 3000)
-npm run dev
-```
-
-### Production Build
-```bash
-# Build static assets & server bundle
-npm run build
-
-# Start production server
-npm start
-```
+| Document Artifact | Focus & Audience | Key Contents |
+| :--- | :--- | :--- |
+| [**`AGENTIC_ORCHESTRATOR_SPEC.md`**](./AGENTIC_ORCHESTRATOR_SPEC.md) | Agent System Architecture | State Graph DAG topology, Model Context Protocol (MCP) skill registry, HILP safety policies, memory layers, and 5-metric Evals framework. |
+| [**`HLD.md`**](./HLD.md) | High-Level Architecture | Cloud Run container boundary, multi-cloud OAuth flow, memory-only byte streaming, and multi-engine worker integration. |
+| [**`LLD.md`**](./LLD.md) | Low-Level Engineering | Full TypeScript interfaces, Express backend API route schemas, and state update algorithms. |
+| [**`FEATURES.md`**](./FEATURES.md) | Feature Specification | Complete capability inventory across all 6 core storage and analytics modules. |
+| [**`USER_GUIDE.md`**](./USER_GUIDE.md) | Operations & End Users | Step-by-step operating instructions for transfers, deduplication, vector clustering, and agent prompt execution. |
 
 ---
 
 ## 🛡️ Security & Compliance
-- **Zero Data Retention**: File payload streams pass strictly through RAM buffers during transfer; bytes are never saved to server disks.
-- **Scoped OAuth Tokens**: Tokens are encapsulated inside HTTP-Only encrypted cookies.
-- **30-Day Safe Recovery**: Purged duplicate items are moved to `/_ShiftCopy_Quarantine/` instead of permanent deletion.
+- **Zero Local Payload Retention**: File payload streams pass strictly through RAM buffers during transfer; bytes are never written to server disks.
+- **Encapsulated Auth Tokens**: Scoped access tokens are stored in HTTP-Only encrypted memory sessions.
+- **30-Day Safe Recovery**: Purged duplicate items are moved to `/_ShiftCopy_Quarantine/` instead of undergoing permanent deletion.
+

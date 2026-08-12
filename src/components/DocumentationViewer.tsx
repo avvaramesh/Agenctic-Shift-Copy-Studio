@@ -220,6 +220,9 @@ Shift Copy Studio is an enterprise-grade cloud storage migration and intelligent
 3. Multi-Tier Runtime System Tier: React 18 SPA + Express Memory Proxy + Cloud Run Container Gateway (Port 3000)
 4. Multi-Layer Security Tier: Air-gapped skill execution + Human-in-the-Loop approval + SHA-256 verification + 30-day quarantine vault`;
     }
+    if (docTab === "agent_spec") {
+      return `# AGENTIC ORCHESTRATOR TECHNICAL SPECIFICATION & ARCHITECTURE DESIGN\n\n1. State Graph DAG Orchestration Loop: Nodes for Intent Parsing, Storage Exploration, Strategy Synthesis, HILP Safety Gate, Execution, and Reflection.\n2. Model Context Protocol (MCP) Tool Integration: Standardized tool skill schema across Go crawler, Rust stream hashing, Python ML pHash, and Gemini AI.\n3. Human-in-the-Loop Permissions (HILP): Risk Tiers 0-2, circuit breaker safety gates (volume & destructive ratio limits), and parametric step overrides.\n4. Ever-Evolving Memory Engine: Short-Term ReAct scratchpad + Long-Term Policy Vault & Negative Examples catalog.\n5. Deterministic Evals Framework: Quantitative benchmarks for Safety Compliance (100%), Plan Precision (>=90%), Human Acceptance Rate (>=85%), and Execution Success Rate (>=98%).`;
+    }
     return `# SHIFT COPY STUDIO: Complete Feature Architecture Specification
 
 Exhaustive breakdown for Dual-Pane Explorer, Deduplication Matrix, Gemini Project Clustering, Agentic AI Storage Assistant, Storage Treemap, and Multi-Engine Telemetry.`;
@@ -328,6 +331,18 @@ Exhaustive breakdown for Dual-Pane Explorer, Deduplication Matrix, Gemini Projec
         >
           <Compass className="w-4 h-4" />
           <span>User Operating Guide</span>
+        </button>
+
+        <button
+          onClick={() => setDocTab("agent_spec")}
+          className={`px-4 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-2 ${
+            docTab === "agent_spec"
+              ? "bg-[#FFE66D] text-black shadow-[2px_2px_0px_0px_#000]"
+              : "text-gray-700 hover:text-black"
+          }`}
+        >
+          <Bot className="w-4 h-4" />
+          <span>Agentic Orchestrator Spec</span>
         </button>
       </div>
 
